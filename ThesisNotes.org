@@ -1,0 +1,110 @@
+
+
+* Weekly repports
+
+** September
+
+** 16 - 23 
+
+*** Repport
+
+I changed the margins to 3.5 cm and the fontsize to 12 points, in order to aid readability,
+as per Francois request.
+
+I updated the sections "Bending light and camera directions" and "Linear projection camera"
+to more clearly explain what the coordinate system/frame of reference, as per the last meeting.
+
+
+
+
+
+Added an initial introduction to the advanced orthographic section
+
+Added the fresnel effects section to the cadvanced orthographic section.
+
+
+Added an initial introduction to the pinhole camera section. 
+
+Added to the pinhole camera section - descriped relationship between coordinates in the image and
+coordinates in space
+
+
+*** Code
+
+
+Concluded that the problem is not with the normal integration, but before, from ploting the albedo.
+
+Added a simplified version of refractLight3d using blender libraries
+
+Added fresnel calculation to refractivePlaneLightAndCameraChange
+
+Updated the readme
+
+**** Testing
+Added tests for refractLight3d
+Added tests for refractivePlaneLightAndCameraChange
+
+*** Simulation
+Ran the following simulations:
+refractivePlaneInternalSphere0.01FlatCol11.25DegX
+
+
+Looked into simulationg glass without fresnel
+
+
+
+Notes: It seems that with the glass, the object gets lighter overall. Understand why
+(fresnell, light from plane), and find way to counteract it (place object deeper inside, higher
+threshold for image import, subtraction of light val across the board,  other normal finding scheme)
+
+
+I have found, that even without any glass plane, the surface is squished. I used a sphere, with
+flat colouring, and the rhos came out bright near the edges. I also tried with wider anges on the lights,
+and with a better normal finding algorithm using thresholds, which helped, but still didn't solve the problem.
+The problem with the squished figures thus probably originates from here, and can be caused by some things:
+
+1. My orginal normal finding implementation does not work - unlikely, as it works on the sythetic bethoven example.
+2. The shadows is a bigger problem than originaly though, and a much better way of handeling them are nescesary
+3. The model realy don't like spheres.
+4. Some other things
+
+
+
+
+
+
+I have found that the x and y axises in the simulation are swapped. However, when i corrected 
+for this, the result became much worse, see 
+
+(imgsNoPlane,NPmask,NPS1) = pslib.imgImporter("./newdata/noPlaneInternalSphere0.01FlatColRotCam/","noPlaneInternalSphere0.01FlatColRotCam","Δ",threshold = 0.02)
+
+zNoPlane = PhotometricStereoStretchSolver(imgsNoPlane,NPmask,NPS1,useUtil = False)
+
+display_surface(zNoPlane)
+
+
+I lookated the problem to the axises in replanePS normal finder being swapped?
+
+
+In the end, both my code and the code francois gave me expected the pictures/light directions 
+to be on the form it already had. If the true light directions are used, they need to be rotated
+90 deg to the right along the Z axis (Y send to X). I will have to take this into consideration 
+in the future, and with other parts of my code. I am now more confused than i was before.
+
+Taking this into account seemed to help my code a lot
+
+
+
+
+I, via Yvians input, found that there was an angle parameter to the sun lightsource, that was not
+set to 0. I also found that you could turn of cast shadows, which could come in handy.
+
+
+
+*** Reading
+
+I read up on perspective PS, so that i can use the ideas from here, latter.
+
+
+
+
